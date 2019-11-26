@@ -1,4 +1,4 @@
-module github.com/go-x-pkg/xseelog
+module github.com/go-x-pkg/log
 
 go 1.13
 
