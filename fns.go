@@ -81,6 +81,7 @@ func LogFn(any logger, l Level) func(string) {
 }
 
 func Log(any logger, l Level, msg string) { LogFn(any, l)(msg) }
+func LogToDiscard(msg string)             { LogFn(nil, Quiet)(msg) }
 
 func LogStd(l Level, msg string) { LogFn(nil, l)(msg) }
 
