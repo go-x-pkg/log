@@ -12,8 +12,8 @@ A golang library providing a lightweight logging *facade*.
 [godev-image]: https://img.shields.io/badge/go.dev-reference-5272B4?logo=go&logoColor=white
 [godev-url]: https://pkg.go.dev/github.com/go-x-pkg/log
 
-[build-image]: https://travis-ci.org/go-x-pkg/log.svg?branch=master
-[build-url]: https://travis-ci.org/go-x-pkg/log
+[build-image]: https://travis-ci.com/go-x-pkg/log.svg?branch=master
+[build-url]: https://travis-ci.com/go-x-pkg/log
 
 [coverage-image]: https://coveralls.io/repos/github/go-x-pkg/log/badge.svg?branch=master
 [coverage-url]: https://coveralls.io/github/go-x-pkg/log?branch=master
