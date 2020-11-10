@@ -44,7 +44,7 @@ var levelText = map[Level]string{
 	Critical: "critical",
 }
 
-func (it Level) String() string { return levelText[it] }
+func (l Level) String() string { return levelText[l] }
 
 func (l *Level) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	v := ""
