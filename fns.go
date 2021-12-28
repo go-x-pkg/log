@@ -11,39 +11,39 @@ import (
 )
 
 var (
-	nope      = func(string) {}
-	nopeLevel = func(string) {}
+	nope      = func(string, ...interface{}) {}
+	nopeLevel = func(string, ...interface{}) {}
 
-	toWriter = func(w io.Writer, msg string) {
+	toWriter = func(w io.Writer, msg string, a ...interface{}) {
 		b := strings.Builder{}
-		b.WriteString(msg)
+		b.WriteString(fmt.Sprintf(msg, a...))
 		b.WriteString("\n")
 		w.Write([]byte(b.String()))
 	}
 
-	toDiscard = func(msg string) { toWriter(ioutil.Discard, msg) }
-	toStderr  = func(msg string) { toWriter(os.Stderr, msg) }
-	toStdout  = func(msg string) { toWriter(os.Stdout, msg) }
+	toDiscard = func(msg string, a ...interface{}) { toWriter(ioutil.Discard, msg, a...) }
+	toStderr  = func(msg string, a ...interface{}) { toWriter(os.Stderr, msg, a...) }
+	toStdout  = func(msg string, a ...interface{}) { toWriter(os.Stdout, msg, a...) }
 )
 
-func LogFn(any logger, l Level) func(string) {
+func LogFn(any logger, l Level) func(string, ...interface{}) {
 	switch lgr := any.(type) {
 	case seelog.LoggerInterface:
-		return func(msg string) {
+		return func(msg string, a ...interface{}) {
 			switch l {
 			case Quiet:
 			case Trace:
-				lgr.Trace(msg)
+				lgr.Tracef(msg, a...)
 			case Debug:
-				lgr.Debug(msg)
+				lgr.Debugf(msg, a...)
 			case Info:
-				lgr.Info(msg)
+				lgr.Infof(msg, a...)
 			case Warn:
-				lgr.Warn(msg)
+				lgr.Warnf(msg, a...)
 			case Error:
-				lgr.Error(msg)
+				lgr.Errorf(msg, a...)
 			case Critical:
-				lgr.Critical(msg)
+				lgr.Criticalf(msg, a...)
 			}
 
 			lgr.Flush()
@@ -80,17 +80,11 @@ func LogFn(any logger, l Level) func(string) {
 	return nope
 }
 
-func Log(any logger, l Level, msg string) { LogFn(any, l)(msg) }
-func LogToDiscard(msg string)             { LogFn(nil, Quiet)(msg) }
+func Log(any logger, l Level, msg string)       { LogFn(any, l)(msg) }
+func LogToDiscard(msg string, a ...interface{}) { LogFn(nil, Quiet)(msg, a...) }
 
-func LogStd(l Level, msg string) { LogFn(nil, l)(msg) }
+func LogStd(l Level, msg string, a ...interface{}) { LogFn(nil, l)(msg, a...) }
 
-func Logf(any logger, l Level, msg string, a ...interface{}) {
-	msg = fmt.Sprintf(msg, a...)
-	Log(any, l, msg)
-}
+func Logf(any logger, l Level, msg string, a ...interface{}) { LogFn(any, l)(msg, a...) }
 
-func LogfStd(l Level, msg string, a ...interface{}) {
-	msg = fmt.Sprintf(msg, a...)
-	LogStd(l, msg)
-}
+func LogfStd(l Level, msg string, a ...interface{}) { LogStd(l, msg, a...) }
