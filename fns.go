@@ -62,18 +62,38 @@ func LogFn(any logger, l Level) func(string, ...interface{}) {
 		}
 	case *zap.SugaredLogger:
 		return func(msg string, a ...interface{}) {
-			switch l {
-			case Quiet:
-			case Trace, Debug:
-				lgr.Debugw(msg, a...)
-			case Info:
-				lgr.Infof(msg, a...)
-			case Warn:
-				lgr.Warnf(msg, a...)
-			case Error:
-				lgr.Errorf(msg, a...)
-			case Critical:
-				lgr.Fatalf(msg, a...)
+			isFirstZapField := false
+			if len(a) > 0 {
+				_, isFirstZapField = a[0].(zap.Field)
+			}
+			if isFirstZapField {
+				switch l {
+				case Quiet:
+				case Trace, Debug:
+					lgr.Debugw(msg, a...)
+				case Info:
+					lgr.Infow(msg, a...)
+				case Warn:
+					lgr.Warnw(msg, a...)
+				case Error:
+					lgr.Errorw(msg, a...)
+				case Critical:
+					lgr.Fatalw(msg, a...)
+				}
+			} else {
+				switch l {
+				case Quiet:
+				case Trace, Debug:
+					lgr.Debugf(msg, a...)
+				case Info:
+					lgr.Infof(msg, a...)
+				case Warn:
+					lgr.Warnf(msg, a...)
+				case Error:
+					lgr.Errorf(msg, a...)
+				case Critical:
+					lgr.Fatalf(msg, a...)
+				}
 			}
 		}
 	case *zap.Logger:
