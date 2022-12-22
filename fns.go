@@ -3,7 +3,6 @@ package log
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -22,13 +21,13 @@ var (
 	nopeLevel = func(string, ...interface{}) {}
 
 	toWriter = func(w io.Writer, msg string, a ...interface{}) {
-		b := strings.Builder{}
+		var b strings.Builder
 		b.WriteString(fmt.Sprintf(msg, a...))
 		b.WriteString("\n")
 		w.Write([]byte(b.String()))
 	}
 
-	toDiscard = func(msg string, a ...interface{}) { toWriter(ioutil.Discard, msg, a...) }
+	toDiscard = func(msg string, a ...interface{}) { toWriter(io.Discard, msg, a...) }
 	toStderr  = func(msg string, a ...interface{}) { toWriter(os.Stderr, msg, a...) }
 	toStdout  = func(msg string, a ...interface{}) { toWriter(os.Stdout, msg, a...) }
 )
